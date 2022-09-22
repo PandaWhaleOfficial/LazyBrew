@@ -6,7 +6,7 @@ const WorldMap = ({ hotelCoordinate, isLoading, initialCoordinate, coordinateBre
         <div className='map'>
             <Map
                 google={google}
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '30%', height: '40%' }}
                 zoom={10}
                 center={initialCoordinate || coordinate}
                 // initialCenter={

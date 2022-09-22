@@ -4,6 +4,10 @@ const axios = require('axios')
 
 const hotelController = {};
 
+    //backend handlers 
+    //if profile is available in the database, then load user preference
+      //if not, create empty user profile in database
+
 // user Mongoose find
 hotelController.getAllHotels = (req, res, next) => {
   Hotel.find({}, (err, result) => {

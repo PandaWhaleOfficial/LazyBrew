@@ -115,6 +115,7 @@ const MainContainer = () => {
             oneProperty.breweryList = breweryArray;
             //use the number of number of breweries to sort hotel order by most breweries in the vacinity
             oneProperty.breweryListLength = breweryArray.length;
+            // console.log(oneProperty)
             finalHotelData.push(oneProperty);
             setHotelList((current) => [...current, oneProperty]);
           });
@@ -165,7 +166,9 @@ const MainContainer = () => {
           <Button
             onClick={(e) => {
               getHotelData();
+          
               setHotelDone(true);
+            
             }}
           >
             See Hotels
@@ -187,16 +190,18 @@ const MainContainer = () => {
           </div>
         </div>
       </section>
-      <section className="child">
+      {/* <section className="child">
         <WorldMap
           coordinateBrewery={coordinateBrewery}
           initialCoordinate={initialCoordinate}
           hotelCoordinate={hotelCoordinate}
           isLoading={isLoading}
         />
-      </section>
+      </section> */}
     </div>
   );
 };
 
 export default connect(mapStateToProps, null)(MainContainer);
+
+

@@ -56,6 +56,11 @@ const Hotel = ({ hotelList, setBrewDone, brewDone }) => {
     }
   }
 
+  //create a favorite function
+    //makes post request to backend sending name of hotel and id
+    //have to create a onclick button similar to hideHotel
+
+
   return (
     <div>
       {/* sort the hotels by number of breweries with vacinity */}
@@ -105,3 +110,5 @@ const Hotel = ({ hotelList, setBrewDone, brewDone }) => {
 };
 
 export default Hotel;
+
+

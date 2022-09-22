@@ -1,16 +1,17 @@
 const express = require('express');
 const path = require('path');
 const api = require('./routes/api');
-const cors = require('cors')
+const cors = require('cors');
 const PORT = 3000;
 const app = express();
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Log all rquests as we build
 
-app.use(cors())
+app.use(cors());
 app.use((req, res, next) => {
   console.log(`server/app.js: received request ${req.method} ${req.url}`);
   next();
@@ -29,12 +30,10 @@ app.get('/', (req, res) => {
 
 // Default 404 handler
 app.use((req, res) => {
-  console.log(`server/app.js: handler not found for request ${req.method} ${req.url}`);
-  res
-    .status(404)
-    .send(
-      'Page not found'
-    );
+  console.log(
+    `server/app.js: handler not found for request ${req.method} ${req.url}`
+  );
+  res.status(404).send('Page not found');
 });
 
 // Global error handler
