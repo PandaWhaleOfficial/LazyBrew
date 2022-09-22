@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material'; 
-
-// TODO add in paramenters?
+import BreweryFeed from './BreweryFeed';
 
 const HotelItem = ({brewDone, setBrewDone, i, ele }) => {
-    // * probabl some state here
+   
 
     return (
     
@@ -28,6 +27,11 @@ const HotelItem = ({brewDone, setBrewDone, i, ele }) => {
             {!brewDone[i] && ('Click me to show breweries')}
             {brewDone[i] && ('Click me to hide breweries')}
             </Button>
+            {brewDone[i] && (<div>
+               <BreweryFeed
+                ele = {ele}
+                />
+            </div>)}
             </div>  
         </div>
     )

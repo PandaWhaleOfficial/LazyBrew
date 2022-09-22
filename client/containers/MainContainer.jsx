@@ -127,7 +127,7 @@ const MainContainer = () => {
       <section className="child">
         <div id="main_wrapper">
           <div>
-            <h1 id="lazyBrew-header">Lazy Brew </h1>
+            <h1 id="lazyBrew-header">Lazy Panda Brew </h1>
             <span id="convenientFont">
               <b>by ConvenientFinds</b>
             </span>
