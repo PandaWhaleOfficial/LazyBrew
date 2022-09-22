@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@mui/material';
-import axios from 'axios';
-import Hotel from './Hotel';
-import WorldMap from './WorldMap';
+import axios from 'axios'
+//import Hotel from './Hotel';
+import HotelFeed from './HotelFeed'
+import WorldMap from './WorldMap'  
 //library for calculating distance using longitude/latitude
 var geodist = require('geodist');
 
@@ -60,27 +61,29 @@ const MainContainer = () => {
     };
     setIsLoading(false);
 
-    axios
-      .request(optionsProperties)
+    // pass in param object with hotel search requirments
+    axios.request(optionsProperties)
       .then((response) => {
-        let propertiesResult = response.data.data.body.searchResults.results;
-        let coordinateForHotels = [];
+        let propertiesResult = response.data.data.body.searchResults.results
+        // parse through hotel properties and make an array of coordinate objects
+          // that coordinate to propertiesResult array
+        let coordinateForHotels = []
         for (let i = 0; i < propertiesResult.length; i++) {
           let coordinateObj = {
             lat: propertiesResult[i].coordinate.lat,
-            lng: propertiesResult[i].coordinate.lon,
-          };
-          coordinateForHotels.push(coordinateObj);
+            lng: propertiesResult[i].coordinate.lon
+          }
+          coordinateForHotels.push(coordinateObj)
         }
-        setHotelCoordinate(coordinateForHotels);
-        return propertiesResult;
-      })
+        // save hotel coordinates as state
+        setHotelCoordinate(coordinateForHotels)
+        return propertiesResult
+      }) // with hotel list
       .then((apiHotelList) => {
-        setInitialCoordinate({
-          lat: apiHotelList[0].coordinate.lat,
-          lng: apiHotelList[0].coordinate.lon,
-        });
-        let finalHotelData = [];
+        // set state with 1st hotels lat & long
+        setInitialCoordinate({ lat: apiHotelList[0].coordinate.lat, lng: apiHotelList[0].coordinate.lon })
+        // iterate through hotel list 
+        let finalHotelData = []
         for (let i = 0; i < apiHotelList.length; i++) {
           const optionsBreweries = {
             method: 'GET',
@@ -88,37 +91,25 @@ const MainContainer = () => {
           };
           let oneProperty = apiHotelList[i];
           //based on hotel longitude/latitude, fetch request for breweries within 2 miles radius
-          axios.request(optionsBreweries).then((beerResponse) => {
-            const breweryArray = [];
-            for (let j = 0; j < beerResponse.data.length; j++) {
-              let distanceFromHotel = geodist(
-                {
-                  lat: oneProperty.coordinate.lat,
-                  lon: oneProperty.coordinate.lon,
-                },
-                {
-                  lat: beerResponse.data[j].latitude,
-                  lon: beerResponse.data[j].longitude,
+          axios.request(optionsBreweries)
+            .then((beerResponse) => {
+              const breweryArray = []
+              for (let j = 0; j < beerResponse.data.length; j++) {
+                let distanceFromHotel = geodist({ lat: oneProperty.coordinate.lat, lon: oneProperty.coordinate.lon }, { lat: beerResponse.data[j].latitude, lon: beerResponse.data[j].longitude })
+                if (distanceFromHotel > 2) {
+                  break
                 }
-              );
-              if (distanceFromHotel > 2) {
-                break;
+                // * if brewery is less than two miles, add it into array of breweries
+                breweryArray.push(beerResponse.data[j])
+                setCoordianteBrewery(breweryCurrent => [...breweryCurrent, { lat: beerResponse.data[j].latitude, lng: beerResponse.data[j].longitude }])
               }
-              setCoordianteBrewery((breweryCurrent) => [
-                ...breweryCurrent,
-                {
-                  lat: beerResponse.data[j].latitude,
-                  lng: beerResponse.data[j].longitude,
-                },
-              ]);
-            }
-            oneProperty.breweryList = breweryArray;
-            //use the number of number of breweries to sort hotel order by most breweries in the vacinity
-            oneProperty.breweryListLength = breweryArray.length;
-            // console.log(oneProperty)
-            finalHotelData.push(oneProperty);
-            setHotelList((current) => [...current, oneProperty]);
-          });
+              // add brewery array as an array to the hotel's object
+              oneProperty.breweryList = breweryArray
+              //use the number of number of breweries to sort hotel order by most breweries in the vacinity
+              oneProperty.breweryListLength = breweryArray.length
+              finalHotelData.push(oneProperty)
+              setHotelList(current => [...current, oneProperty])
+            })
         }
         return finalHotelData.length;
       })
@@ -176,17 +167,15 @@ const MainContainer = () => {
           <div id="allHotelsWrapper">
             {isLoading || <div>Loading...</div>}
 
-            {hotelDone && (
-              <Hotel
-                setHotelList={setHotelList}
-                hotelList={hotelList}
-                hotelDone={hotelDone}
-                brewDone={brewDone}
-                setBrewDone={setBrewDone}
-                setHotelDone={setHotelDone}
-                isLoading={isLoading}
-              />
-            )}
+            {hotelDone && <HotelFeed
+              setHotelList={setHotelList}
+              hotelList={hotelList}
+              hotelDone={hotelDone}
+              brewDone={brewDone}
+              setBrewDone={setBrewDone}
+              setHotelDone={setHotelDone}
+              isLoading={isLoading}
+            />}
           </div>
         </div>
       </section>

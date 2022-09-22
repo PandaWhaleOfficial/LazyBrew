@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-const Brewery = ({ brewery }) => {
-  const [showSpecificBrewery, setShowSpecificBrewery] = useState({})
 
+
+const BreweryItem = ({ brewery }) => {
+  const [showSpecificBrewery, setShowSpecificBrewery] = useState({})
+  //currently prop drilling brewery info into this rendering 
+  //  
   return (
 
-    <div className='breweryGridContainer'>
+    <div className='breweryItem'>
       <div className='box header'><h3>{brewery.name}</h3></div>
       <div className='box content'><b>Phone:</b></div>
       {/* if brewery object has phone number, render the phone number, else display "No phone number provided" */}
@@ -19,4 +22,4 @@ const Brewery = ({ brewery }) => {
   )
 };
 
-export default Brewery;
+export default BreweryItem;
