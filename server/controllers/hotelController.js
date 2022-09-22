@@ -1,12 +1,12 @@
 const Hotel = require('../models/hotelModel');
 const { createErr } = require('../utils/utils');
-const axios = require('axios')
-
+const axios = require('axios');
+const db = require('../models/usersModel');
 const hotelController = {};
 
-    //backend handlers 
-    //if profile is available in the database, then load user preference
-      //if not, create empty user profile in database
+//backend handlers
+//if profile is available in the database, then load user preference
+//if not, create empty user profile in database
 
 // user Mongoose find
 hotelController.getAllHotels = (req, res, next) => {
@@ -16,16 +16,15 @@ hotelController.getAllHotels = (req, res, next) => {
     } else {
       res.json(result);
     }
-      
-  })
-}
+  });
+};
 hotelController.postHotel = async (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     Hotel.create({
       nameOfHotel: req.body.nameOfHotel,
-      action: req.body.action
-    })
+      action: req.body.action,
+    });
     return next();
   } catch (err) {
     return next(
@@ -38,6 +37,44 @@ hotelController.postHotel = async (req, res, next) => {
   }
 };
 
+hotelController.checkUser = (req, res, next) => {
+  //conditional for if user exists
+  //conditional to create new user
+  console.log(req.body);
+  const newOne = `INSERT INTO user_table (id, email, given_name, family_name, picture) VALUES(${req.body.sub},${req.body.email},${req.body.given_name},${req.body.family_name},${req.body.picture})`;
+
+  db.query(newOne).then((response) => {
+    console.log('userdata uploaded success');
+    return next();
+  });
+};
+
+hotelController.favHotel = (req, res, next) => {
+  console.log('this is req.body from favHotel:', req.body);
+  return next();
+};
+
+// starWarsController.addCharacter = (req, res, next) => {
+//   // write code here
+//   console.log(req.body);
+//   const newChar = `INSERT INTO people (name, gender, birth_year, eye_color, skin_color, hair_color, mass, height, homeworld_id) VALUES('${req.body.name}','${req.body.gender}','${req.body.birth_year}','${req.body.eye_color}','${req.body.skin_color}','${req.body.hair_color}','${req.body.mass}','${req.body.height}','${req.body.homeworld_id}') RETURNING *`;
+//   db
+//     .query(newChar)
+//     .then(response => {
+//       const newCharData = {
+//         birth_year: req.body.birth_year,
+//         eye_color: req.body.eye_color,
+//         gender: req.body.gender,
+//         hair_color: req.body.skin_color,
+//         height: req.body.height,
+//         homeworld_id: req.body.homeworld_id,
+//         mass: req.body.mass,
+//         name: req.body.name,
+//         skin_color: req.body.skin_color,
+//       };
+//       res.locals.characters = newCharData;
+//       return next();
+//     });
 // hotelController.postBreweryRecommendation = async (req, res, next) => {
 //   console.log(req.body)
 //   try {
