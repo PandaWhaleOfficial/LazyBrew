@@ -4,6 +4,9 @@ import jwt_decode from 'jwt-decode';
 import './styles.scss';
 import WorldMap from './containers/WorldMap';
 import axios from 'axios';
+// import pandalogo from '/images/panda.png'
+// console.log(panda)
+// <img src="/images/panda.png"/>
 
 const App = () => {
   function handleCallbackResponse(response) {
@@ -44,7 +47,9 @@ const App = () => {
 
   return (
     <>
+
       <div className="App">
+        <img id="pandaImage" src="/images/newpanda.png"/>
         <div id="signInDiv"></div>
       </div>
 
@@ -55,6 +60,9 @@ const App = () => {
           <MainContainer />
         </div>
         {/* <div className='map'><WorldMap /></div> */}
+      </div>
+      <div className="footer">
+        
       </div>
     </>
   );

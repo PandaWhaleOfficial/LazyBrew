@@ -1,4 +1,4 @@
-# LazyBrew is an amazing app that focuses on finding the best hotels with the best breweries nearby
+# Lazy Panda Brew is an amazing app that focuses on finding the best hotels with the best breweries nearby
 Vu - this is a test commit
 A template repository for a MongoDB - Express - React (w/ Redux) - Node project.
 

@@ -63,7 +63,7 @@ const HotelFeed = ({ hotelList, setBrewDone, brewDone }) => {
         return <HotelItem 
           //post={el} 
           ele = {el}
-          key={index} 
+          key={`hotelFeed ${index}`} 
           i = {index}
           setBrewDone={setBrewDone} 
           brewDone={brewDone} />;
