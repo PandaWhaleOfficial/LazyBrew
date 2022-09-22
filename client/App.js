@@ -2,6 +2,7 @@ import React from 'react';
 
 import MainContainer from './containers/MainContainer';
 import './styles.scss'
+// world map not being used
 import WorldMap from './containers/WorldMap'
 
 const App = () => {
