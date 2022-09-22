@@ -6,16 +6,15 @@ import axios from 'axios'
 import HotelFeed from './HotelFeed'
 import WorldMap from './WorldMap'  
 //library for calculating distance using longitude/latitude
-var geodist = require('geodist')
+var geodist = require('geodist');
 
 const mapStateToProps = (state) => ({});
 
 const MainContainer = () => {
-
-  const [hotelList, setHotelList] = useState([])
-  const [hotelDone, setHotelDone] = useState(false)
-  const [hotelCoordinate, setHotelCoordinate] = useState([])
-  const [initialCoordinate, setInitialCoordinate] = useState({})
+  const [hotelList, setHotelList] = useState([]);
+  const [hotelDone, setHotelDone] = useState(false);
+  const [hotelCoordinate, setHotelCoordinate] = useState([]);
+  const [initialCoordinate, setInitialCoordinate] = useState({});
   const [brewDone, setBrewDone] = useState({
     0: false,
     1: false,
@@ -27,18 +26,18 @@ const MainContainer = () => {
     7: false,
     8: false,
     9: false,
-  })
-  const [isLoading, setIsLoading] = useState(true)
-  const [checkInDate, setCheckInDate] = useState('')
-  const [checkOutDate, setCheckOutDate] = useState('')
-  const [selectedCity, setCity] = useState('')
-  const [coordinateBrewery, setCoordianteBrewery] = useState([])
-  const [hotelResultNumber, setHotelResultNumber] = useState(5)
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+  const [selectedCity, setCity] = useState('');
+  const [coordinateBrewery, setCoordianteBrewery] = useState([]);
+  const [hotelResultNumber, setHotelResultNumber] = useState(5);
 
   //fetch request for hotels with check in/check out dates pertaining to city selected
   const getHotelData = () => {
-    let checkIn = checkInDate.split("/").reverse().join("-")
-    let checkOut = checkOutDate.split("/").reverse().join("-")
+    let checkIn = checkInDate.split('/').reverse().join('-');
+    let checkOut = checkOutDate.split('/').reverse().join('-');
     const optionsProperties = {
       method: 'GET',
       url: 'https://hotels4.p.rapidapi.com/properties/list',
@@ -51,16 +50,16 @@ const MainContainer = () => {
         adults1: '1',
         sortOrder: 'starRatings',
         locale: 'en_US',
-        currency: 'USD'
+        currency: 'USD',
       },
       headers: {
         //have to reapply for the API key when fetch no longer works: https://rapidapi.com/apidojo/api/hotels4
         //example: AXIOS error code
         'X-RapidAPI-Key': 'a3d20fff95mshf7a26c3d8f9e65cp1b474bjsn3fd4a5e652e7',
-        'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
-      }
+        'X-RapidAPI-Host': 'hotels4.p.rapidapi.com',
+      },
     };
-    setIsLoading(false)
+    setIsLoading(false);
 
     // pass in param object with hotel search requirments
     axios.request(optionsProperties)
@@ -89,8 +88,8 @@ const MainContainer = () => {
           const optionsBreweries = {
             method: 'GET',
             url: `https://api.openbrewerydb.org/breweries?by_dist=${apiHotelList[i].coordinate.lat},${apiHotelList[i].coordinate.lon}&per_page=10`,
-          }
-          let oneProperty = apiHotelList[i]
+          };
+          let oneProperty = apiHotelList[i];
           //based on hotel longitude/latitude, fetch request for breweries within 2 miles radius
           axios.request(optionsBreweries)
             .then((beerResponse) => {
@@ -112,45 +111,59 @@ const MainContainer = () => {
               setHotelList(current => [...current, oneProperty])
             })
         }
-        return finalHotelData.length
+        return finalHotelData.length;
       })
       .then((finalData) => {
         //set state so that the page can rerender upon the promise fetch call completion
-        setIsLoading(true)
+        setIsLoading(true);
       })
       .catch((e) => {
-        console.error(e, 'hotels not compelte')
-      })
-  }
+        console.error(e, 'hotels not compelte');
+      });
+  };
 
   return (
-    <container className='holdingEverything'>
-      <section className='child'>
+    <div className="holdingEverything">
+      <section className="child">
         <div id="main_wrapper">
-          <div><h1 id='lazyBrew-header'>Lazy Brew </h1><span id="convenientFont"><b>by ConvenientFinds</b></span></div>
+          <div>
+            <h1 id="lazyBrew-header">Lazy Brew </h1>
+            <span id="convenientFont">
+              <b>by ConvenientFinds</b>
+            </span>
+          </div>
           <br />
           <label>Select Destination</label>/
           <select onChange={(e) => setCity(e.target.value)}>
-            <option value="" disabled selected>Select Your City</option>
+            <option value="" >
+              Select Your City
+            </option>
             <option value={'1506246'}>New York</option>
             <option value={'1439028'}>Los Angeles</option>
             <option value={'1493604'}>San Francisco</option>
             <option value={'1633050'}>Hawaii</option>
             <option value={'780'}>Colorado</option>
-
-
           </select>
-
           <label>Check-in Date</label>
-          <input type="date" onChange={(e) => setCheckInDate(e.target.value)}></input>
-          <label>Check-in Date</label>
-          <input type="date" onChange={(e) => setCheckOutDate(e.target.value)}></input>
-
-          <Button onClick={(e) => {
-            getHotelData();
-            setHotelDone(true)
-          }}>See Hotels</Button>
-
+          <input
+            type="date"
+            onChange={(e) => setCheckInDate(e.target.value)}
+          ></input>
+          <label>Check-out Date</label>
+          <input
+            type="date"
+            onChange={(e) => setCheckOutDate(e.target.value)}
+          ></input>
+          <Button
+            onClick={(e) => {
+              getHotelData();
+          
+              setHotelDone(true);
+            
+            }}
+          >
+            See Hotels
+          </Button>
           <div id="allHotelsWrapper">
             {isLoading || <div>Loading...</div>}
 
@@ -164,15 +177,20 @@ const MainContainer = () => {
               isLoading={isLoading}
             />}
           </div>
-
-        </div >
+        </div>
       </section>
-      <section className='child'>
-        <WorldMap coordinateBrewery={coordinateBrewery} initialCoordinate={initialCoordinate} hotelCoordinate={hotelCoordinate} isLoading={isLoading} />
-      </section>
-    </container>
+      {/* <section className="child">
+        <WorldMap
+          coordinateBrewery={coordinateBrewery}
+          initialCoordinate={initialCoordinate}
+          hotelCoordinate={hotelCoordinate}
+          isLoading={isLoading}
+        />
+      </section> */}
+    </div>
   );
-
-}
+};
 
 export default connect(mapStateToProps, null)(MainContainer);
+
+

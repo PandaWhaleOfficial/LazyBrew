@@ -12,10 +12,18 @@ router.get('/', hotelController.getAllHotels, (req, res) => {
   res.status(200).json({ message: 'api router online' });
 });
 
+//route for hiding certain hotels
 router.post('/', hotelController.postHotel, (req, res) => {
   console.log(`server/routes/api.js.router.post('/'): received request ${req.method} ${req.url}`);
   res.status(200).json({ message: 'api router online POST' });
 });
+
+//route for user sign in and load preferences
+router.post('/signin', (req, res) => {
+  res.status(200).json(console.log('hi'))
+})
+
+
 
 // router.put('/', hotelController.changeRecommendation, (req, res) => {
 //   console.log(`server/routes/api.js.router.put('/'): received request ${req.method} ${req.url}`);
