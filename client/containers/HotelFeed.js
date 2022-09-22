@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import BreweryFeed from "./BreweryFeed.js";
-import HotelItem from "./HotelItem.js";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import BreweryFeed from './BreweryFeed.js';
+import HotelItem from './HotelItem.js';
+import axios from 'axios';
 
-const HotelFeed = ({ hotelList, setBrewDone, brewDone }) => {
+const HotelFeed = ({ hotelList, setBrewDone, brewDone, userData }) => {
   /*
   *** working on state management/loading api process to be more clean ***
   1) we need a button for hide or show on HOTEL
@@ -30,7 +30,7 @@ const HotelFeed = ({ hotelList, setBrewDone, brewDone }) => {
   // on intial render, access all hotels from DB & add to exclusionListPush array
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api")
+      .get('http://localhost:3000/api')
       .then((dbResponse) => {
         let exclusionListPush = [];
         for (let i = 0; i < dbResponse.data.length; i++) {
@@ -39,7 +39,7 @@ const HotelFeed = ({ hotelList, setBrewDone, brewDone }) => {
         setExclusionList(exclusionListPush);
       })
       .catch((e) => {
-        console.error("error is here");
+        console.error('error is here');
       });
   }, []);
 
@@ -48,28 +48,52 @@ const HotelFeed = ({ hotelList, setBrewDone, brewDone }) => {
     // setState to change / test to see if it will hide or show
     setSpecHotel((prevHotels) => ({ ...prevHotels, [i]: !specificHotel[i] })); //overwrites the specific hotel at key value of i to be false
     try {
-      axios.post("http://localhost:3000/api", {
+      axios.post('http://localhost:3000/api', {
         nameOfHotel: name,
-        action: "exclude",
+        action: 'exclude',
       });
     } catch (err) {
-      console.log(err, "err");
+      console.log(err, 'err');
     }
+  }
+
+  function favHotel(ele) {
+    console.log(ele);
+    console.log('hotel_name:', ele.name);
+    console.log('hotel_id:', ele.id);
+
+    fetch('http://localhost:3000/api/favHotel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ hotel_name: ele.name, hotel_id: ele.id }),
+    })
+      .then((res) => console.log('made it inside handler'))
+      .then((data) => {
+        console.log('this is data from favHotel event handler:', data);
+      })
+      .catch((error) => console.log('error in hotelItem front post', error));
   }
 
   return (
     <div className="hotelFeed">
       {hotelList.map((el, index) => {
-        return <HotelItem 
-          //post={el} 
-          ele = {el}
-          key={index} 
-          i = {index}
-          setBrewDone={setBrewDone} 
-          brewDone={brewDone} />;
+        return (
+          <HotelItem
+            //post={el}
+            userData={userData}
+            favHotel={favHotel}
+            hideHotel={hideHotel}
+            ele={el}
+            key={index}
+            i={index}
+            setBrewDone={setBrewDone}
+            brewDone={brewDone}
+          />
+        );
       })}
     </div>
   );
- 
 };
 export default HotelFeed;
