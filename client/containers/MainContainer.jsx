@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@mui/material';
 import axios from 'axios'
-import Hotel from './Hotel';
-import WorldMap from './WorldMap'
+//import Hotel from './Hotel';
+import HotelFeed from './HotelFeed'
+import WorldMap from './WorldMap'  
 //library for calculating distance using longitude/latitude
 var geodist = require('geodist')
 
@@ -61,10 +62,12 @@ const MainContainer = () => {
     };
     setIsLoading(false)
 
-
+    // pass in param object with hotel search requirments
     axios.request(optionsProperties)
       .then((response) => {
         let propertiesResult = response.data.data.body.searchResults.results
+        // parse through hotel properties and make an array of coordinate objects
+          // that coordinate to propertiesResult array
         let coordinateForHotels = []
         for (let i = 0; i < propertiesResult.length; i++) {
           let coordinateObj = {
@@ -73,11 +76,14 @@ const MainContainer = () => {
           }
           coordinateForHotels.push(coordinateObj)
         }
+        // save hotel coordinates as state
         setHotelCoordinate(coordinateForHotels)
         return propertiesResult
-      })
+      }) // with hotel list
       .then((apiHotelList) => {
+        // set state with 1st hotels lat & long
         setInitialCoordinate({ lat: apiHotelList[0].coordinate.lat, lng: apiHotelList[0].coordinate.lon })
+        // iterate through hotel list 
         let finalHotelData = []
         for (let i = 0; i < apiHotelList.length; i++) {
           const optionsBreweries = {
@@ -94,8 +100,11 @@ const MainContainer = () => {
                 if (distanceFromHotel > 2) {
                   break
                 }
+                // * if brewery is less than two miles, add it into array of breweries
+                breweryArray.push(beerResponse.data[j])
                 setCoordianteBrewery(breweryCurrent => [...breweryCurrent, { lat: beerResponse.data[j].latitude, lng: beerResponse.data[j].longitude }])
               }
+              // add brewery array as an array to the hotel's object
               oneProperty.breweryList = breweryArray
               //use the number of number of breweries to sort hotel order by most breweries in the vacinity
               oneProperty.breweryListLength = breweryArray.length
@@ -145,7 +154,7 @@ const MainContainer = () => {
           <div id="allHotelsWrapper">
             {isLoading || <div>Loading...</div>}
 
-            {hotelDone && <Hotel
+            {hotelDone && <HotelFeed
               setHotelList={setHotelList}
               hotelList={hotelList}
               hotelDone={hotelDone}

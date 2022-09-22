@@ -12,7 +12,7 @@ hotelController.getAllHotels = (req, res, next) => {
     } else {
       res.json(result);
     }
-
+      
   })
 }
 hotelController.postHotel = async (req, res, next) => {
